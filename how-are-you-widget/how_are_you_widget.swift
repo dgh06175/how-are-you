@@ -41,22 +41,30 @@ struct how_are_you_widgetEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        VStack(alignment: .leading) {
-            Text("최근 통화")
-                .fontWeight(.regular)
-                .foregroundColor(.gray)
-            Text("어머니")
-                .fontWeight(.medium)
-            Text("8일 전")
-                .fontWeight(.semibold)
+        ZStack {
+            //Color(red: 28 / 255, green: 28 / 255, blue: 28 / 255)
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("최근 통화")
+                        .font(.system(size: 12))
+                        .foregroundStyle(.secondary)
+                    
+                    Text("어머니")
+                        .fontWeight(.medium)
+                        .font(.system(size: 24))
+                    
+                    Spacer()
+
+                    Text("8일 전")
+                        .fontWeight(.semibold)
+                        .font(.system(size: 30))
+                        .foregroundStyle(Color.red)
+                }
+                .padding(.vertical, 12)
+                
+                Spacer()
+            }
         }
-//        VStack {
-//            Text("Time:")
-//            Text(entry.date, style: .time)
-//
-//            Text("Favorite Emoji:")
-//            Text(entry.configuration.favoriteEmoji)
-//        }
     }
 }
 
