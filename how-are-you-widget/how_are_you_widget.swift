@@ -37,37 +37,55 @@ struct SimpleEntry: TimelineEntry {
     let configuration: ConfigurationAppIntent
 }
 
-struct how_are_you_widgetEntryView : View {
+struct how_are_you_widgetEntryView: View {
     var entry: Provider.Entry
+    
+    @Environment(\.colorScheme) var colorScheme
+
+    private enum FontConstants {
+        static let titleFontSize: CGFloat = 12
+        static let nameFontSize: CGFloat = 24
+        static let daysAgoFontSize: CGFloat = 30
+        static let verticalPadding: CGFloat = 12
+    }
 
     var body: some View {
         ZStack {
-            //Color(red: 28 / 255, green: 28 / 255, blue: 28 / 255)
+            //colorScheme == .dark ? Color.darkBackground : Color.lightBackground
             HStack {
-                VStack(alignment: .leading) {
-                    Text("최근 통화")
-                        .font(.system(size: 12))
-                        .foregroundStyle(.secondary)
-                    
-                    Text("어머니")
-                        .fontWeight(.medium)
-                        .font(.system(size: 24))
+                    VStack(alignment: .leading) {
+                        Text("최근 통화")
+                            .font(.system(size: FontConstants.titleFontSize))
+                            .foregroundStyle(.secondary)
+                        
+                        Text("어머니")
+                            .fontWeight(.medium)
+                            .font(.system(size: FontConstants.nameFontSize))
+                        
+                        Spacer()
+
+                        Text("8일 전")
+                            .fontWeight(.semibold)
+                            .font(.system(size: FontConstants.daysAgoFontSize))
+                            .foregroundStyle(Color.red)
+                    }
+                    .padding(.vertical, FontConstants.verticalPadding)
                     
                     Spacer()
-
-                    Text("8일 전")
-                        .fontWeight(.semibold)
-                        .font(.system(size: 30))
-                        .foregroundStyle(Color.red)
                 }
-                .padding(.vertical, 12)
-                
-                Spacer()
-            }
+                .padding()
+            //.background(Constants.lightBackgroundColor)
         }
     }
 }
 
+extension Color {
+    static let lightColorGrade: Double = 240
+    static let darkColorGrade: Double = 28
+    static let lightBackground = Color(red: lightColorGrade / 255, green: lightColorGrade / 255, blue: lightColorGrade / 255)
+    static let darkBackground = Color(red: darkColorGrade / 255, green: darkColorGrade / 255, blue: darkColorGrade / 255)
+}
+ 
 struct how_are_you_widget: Widget {
     let kind: String = "how_are_you_widget"
 
@@ -76,6 +94,9 @@ struct how_are_you_widget: Widget {
             how_are_you_widgetEntryView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
         }
+        .configurationDisplayName("위젯!")
+        .description("예시 위젯입니다.")
+        .contentMarginsDisabled()
     }
 }
 
@@ -92,6 +113,7 @@ extension ConfigurationAppIntent {
         return intent
     }
 }
+
 
 #Preview(as: .systemSmall) {
     how_are_you_widget()
