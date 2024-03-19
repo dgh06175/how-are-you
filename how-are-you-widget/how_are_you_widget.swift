@@ -85,7 +85,6 @@ struct how_are_you_widgetEntryView: View {
             
             Spacer()
         }
-        .padding()
     }
 }
 
@@ -97,7 +96,7 @@ extension Color {
 }
  
 struct how_are_you_widget: Widget {
-    let kind: String = "how_are_you_widget"
+    let kind: String = "안부 전화 위젯"
 
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
@@ -106,10 +105,10 @@ struct how_are_you_widget: Widget {
         }
         .configurationDisplayName("위젯!")
         .description("예시 위젯입니다.")
-        .contentMarginsDisabled()
     }
 }
 
+// 사용자가 위젯을 커스터마이즈 할떄 선택할 수 있는 기본 설정 제공
 extension ConfigurationAppIntent {
     fileprivate static var smiley: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
