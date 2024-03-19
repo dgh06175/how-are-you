@@ -17,18 +17,32 @@ struct Provider: AppIntentTimelineProvider {
         SimpleEntry(date: Date(), configuration: configuration)
     }
     
-    func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
-        var entries: [SimpleEntry] = []
+    // 하루에 한번 업데이트가 발생하도록 하는 타임라인의 정책
+    func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<Entry> {
+        var entries: [Entry] = []
 
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, configuration: configuration)
-            entries.append(entry)
-        }
+        let nextUpdateDate = getNextUpdateDate()
 
-        return Timeline(entries: entries, policy: .atEnd)
+        entries.append(Entry(date: currentDate, configuration: configuration))
+
+        let timeline = Timeline(entries: entries, policy: .after(nextUpdateDate))
+        return timeline
+    }
+    
+    private func getNextUpdateDate() -> Date {
+        let currentDate = Date()
+        let calendar = Calendar.current
+        
+        // 다음 날 자정의 시간을 계산한다.
+        var dateComponents = calendar.dateComponents([.year, .month, .day], from: currentDate)
+        dateComponents.day! += 1
+        dateComponents.hour = 0
+        dateComponents.minute = 0
+        dateComponents.second = 0
+        let nextUpdateDate = calendar.date(from: dateComponents)!
+        
+        return nextUpdateDate
     }
 }
 
@@ -50,32 +64,28 @@ struct how_are_you_widgetEntryView: View {
     }
 
     var body: some View {
-        ZStack {
-            //colorScheme == .dark ? Color.darkBackground : Color.lightBackground
-            HStack {
-                    VStack(alignment: .leading) {
-                        Text("최근 통화")
-                            .font(.system(size: FontConstants.titleFontSize))
-                            .foregroundStyle(.secondary)
-                        
-                        Text("어머니")
-                            .fontWeight(.medium)
-                            .font(.system(size: FontConstants.nameFontSize))
-                        
-                        Spacer()
+        HStack {
+            VStack(alignment: .leading) {
+                Text("최근 통화")
+                    .font(.system(size: FontConstants.titleFontSize))
+                    .foregroundStyle(.secondary)
+                Text("어머니")
+                    .fontWeight(.medium)
+                    .font(.system(size: FontConstants.nameFontSize))
 
-                        Text("8일 전")
-                            .fontWeight(.semibold)
-                            .font(.system(size: FontConstants.daysAgoFontSize))
-                            .foregroundStyle(Color.red)
-                    }
-                    .padding(.vertical, FontConstants.verticalPadding)
-                    
-                    Spacer()
-                }
-                .padding()
-            //.background(Constants.lightBackgroundColor)
+                Spacer()
+                
+                Text("8일 전")
+                    .fontWeight(.semibold)
+                    .font(.system(size: FontConstants.daysAgoFontSize))
+                    .foregroundStyle(Color.red)
+
+            }
+            .padding(.vertical, FontConstants.verticalPadding)
+            
+            Spacer()
         }
+        .padding()
     }
 }
 
