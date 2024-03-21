@@ -55,7 +55,7 @@ struct how_are_you_widgetEntryView: View {
     var entry: Provider.Entry
     
     @Environment(\.colorScheme) var colorScheme
-
+ 
     private enum FontConstants {
         static let titleFontSize: CGFloat = 12
         static let nameFontSize: CGFloat = 24
